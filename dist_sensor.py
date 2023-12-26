@@ -3,30 +3,39 @@ import time
 import RPi.GPIO as GPIO
 
 
-PIN_TRIGGER = 7
-PIN_ECHO = 11
+def init_all_sensors(sensor_pins: dict[str, tuple[int, int]]):
+    for key, value in sensor_pins.items():
+        init_sensor(value[0], value[1])
+        print(f"Sensor {key} initialized")
 
-def init_sensor():
+    print("All sensors initialized")
+
+def get_all_sensors_data(timeout, sensor_pins: dict[str, tuple[int, int]]) -> dict[str, float]:
+    res = {}
+    for key, value in sensor_pins.items():
+        res[key] = get_distance(timeout, value[0], value[1])
+
+    return res
+
+def init_sensor(trigger, echo):
     GPIO.setmode(GPIO.BOARD)
 
-    GPIO.setup(PIN_TRIGGER, GPIO.OUT)
-    GPIO.setup(PIN_ECHO, GPIO.IN)
+    GPIO.setup(trigger, GPIO.OUT)
+    GPIO.setup(echo, GPIO.IN)
 
-    GPIO.output(PIN_TRIGGER, GPIO.LOW)
-    
-    print("Sensor initialized.")
+    GPIO.output(trigger, GPIO.LOW)
 
 
-def get_distance(timeout):
+def get_distance(timeout, trigger, echo):
     time.sleep(timeout)
 
-    GPIO.output(PIN_TRIGGER, GPIO.HIGH)
-    GPIO.output(PIN_TRIGGER, GPIO.LOW)
+    GPIO.output(trigger, GPIO.HIGH)
+    GPIO.output(trigger, GPIO.LOW)
 
-    while GPIO.input(PIN_ECHO) == 0:
+    while GPIO.input(echo) == 0:
         pulse_start_time = time.time()
         
-    while GPIO.input(PIN_ECHO) == 1:
+    while GPIO.input(echo) == 1:
         pulse_end_time = time.time()
 
     pulse_duration = pulse_end_time - pulse_start_time
