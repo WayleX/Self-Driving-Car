@@ -28,10 +28,11 @@ def initialize():
 
 
 def send_command(arduino, command: str):
-    command = command * 50
+    command = command *5 #50
     try:
         arduino.write(command.encode())
-        time.sleep(0.07)	
+        #time.sleep(0.07)	
+        time.sleep(0.012)
         # for i in range(10):
         #     arduino.write(command.encode())
         #     # time.sleep(0.07)
