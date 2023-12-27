@@ -37,15 +37,15 @@ def main():
 
                 if command < -2:
                     current_angle = camera_command
-                    print('Livo', current_angle, command)
+                    #print('Livo', current_angle, command)
                     car_controller.send_command(arduino, abs(int(command)//2)*'L')
                     car_controller.send_command(arduino, abs(int(command)//2)*'L')
                 elif command > 2:
                     current_angle = camera_command
-                    print('Pravo', current_angle, command)
+                    #print('Pravo', current_angle, command)
                     car_controller.send_command(arduino, abs(int(command))*'R')
                 else:
-                    print('Pryamo', current_angle)
+                    #print('Pryamo', current_angle)
                     pass
                 time.sleep(0.1)
                 lock.acquire()
@@ -56,7 +56,7 @@ def main():
             if d < 27.0:
                 d = dist_sensor.get_distance(timeout = 0.0001)
                 if d <27.0:
-                    print("STOOOP!")
+                    #print("STOOOP!")
                     # car_controller.send_command(arduino, "S")
                     car_controller.send_command(arduino, 20 * 'B')
                     break
@@ -86,17 +86,15 @@ def get_camera():
             #result = cv2.bitwise_and(image, image, mask=mask)
             image_threshold = 1000
             if np.sum(mask>0) > image_threshold:
+                #ss - sobel mask
                 ss = cv2.Sobel(mask, ddepth=cv2.CV_64F, dx = 1, dy =1,ksize=5)
                 ss = np.absolute(ss)
                 ss = ss[100:,:]
                 ss_sums = np.sum(ss, axis = 0)
-                #print(np.sum(ss_sums))
                 sum = 0
                 for x in range(640):
                     sum += ((x-320)**2)*ss_sums[x]*np.sign(x-320)
                 standartized_sum = sum/(np.sum(ss_sums)*320**2)
-                #colsums = np.sum(ss,axis=1)
-                #print(standartized_sum)
                 if standartized_sum >= 0:
                     camera_command = 127*  min(1, 1.9 * (standartized_sum))
                 elif standartized_sum < 0:

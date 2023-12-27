@@ -11,10 +11,8 @@ def check(model, picam2):
     global camera_ready, camera_command
     
     while True:
-        print("gg")
         (buffer, ), metadata = picam2.capture_buffers(["main"]) 
         pil_image = picam2.helpers.make_image(buffer, picam2.camera_configuration()["main"])
-        pil_image.save("./gg.png")
         x_size = pil_image.width
 
 
@@ -26,10 +24,9 @@ def get_camera():
     epoch = 0
     while True:
         if camera_ready == 2:
-            epoch += 1w
+            epoch += 1
             (buffer, ), metadata = picam2.capture_buffers(["main"]) 
             img = picam2.helpers.make_image(buffer, picam2.camera_configuration()["main"])
-            img.save(f'./huy__{count}.png')
             open_cv_image = np.array(img.convert('RGB'))
             image = open_cv_image[:,:,::-1].copy()
             hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)

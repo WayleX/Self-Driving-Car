@@ -35,7 +35,6 @@ def get_camera():
             epoch += 1
             (buffer, ), metadata = picam2.capture_buffers(["main"])
             img = picam2.helpers.make_image(buffer, picam2.camera_configuration()["main"])
-            img.save(f'./huy__{epoch}.png')
             open_cv_image = np.array(img.convert('RGB'))
             image = open_cv_image[:,:,::-1].copy()
             hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -45,15 +44,13 @@ def get_camera():
             lower = np.array([175,70,50])
             upper = np.array([180,255,255])
             mask = mask | cv2.inRange(hsv, lower, upper)
-            cv2.imwrite(f'./huyy__{epoch}.png', mask)
-            #result = cv2.bitwise_and(image, image, mask=mask)
             image_threshold = 5500
             destination_threshold = 35000
             if np.sum(mask>0) > destination_threshold:
                 camera_ready = 0
                 print('Peremoga')
             if np.sum(mask>0) > image_threshold:
-                #ss = cv2.Sobel(mask, ddepth=cv2.CV_64F, dx = 1, dy =1,ksize=5)
+                #ss - Sobel mask
                 ss = mask
                 ss = np.absolute(ss)
                 ss = ss[100:,:]

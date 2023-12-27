@@ -37,20 +37,18 @@ def main():
         global camera_ready
         global camera_command
         current_angle = 0
-        while False:
+        while True:
             if camera_ready == 1:
                 camera_ready = 0
                 angle_true = camera_command
                 command = angle_true - current_angle
                 current_angle = angle_true
                 if command < 0:
-                    print('HUy left', abs(int(command)))
                     car_controller.send_command(arduino, abs(int(command))*'L')
                 elif command > 0:
-                    print('Huy right', command)
                     car_controller.send_command(arduino, abs(int(command))*'R')
                 else:
-                    print('pizduy')
+                    pass
                 continue
             
             count += 1
