@@ -10,7 +10,7 @@ picam2 = 0
 camera_ready = 0
 camera_command = ''
 def main():
-    dist_sensor.init_sensor()
+    #dist_sensor.init_sensor()
 
     with serial.Serial("/dev/ttyUSB0", 9600, timeout=1) as arduino:
         time.sleep(1)
@@ -26,7 +26,7 @@ def main():
         #car_controller.send_command(arduino, "R" * 10)
 
         car_controller.send_command(arduino, 'R'*400)
-        car_controller.send_command(arduino, 'L'*72)
+        car_controller.send_command(arduino, 'L'*50)
         #car_controller.send_command(arduino, 'F'*300)
         #time.sleep(3)
         #car_controller.send_command(arduino, "L" * 4)
@@ -37,7 +37,7 @@ def main():
         global camera_ready
         global camera_command
         current_angle = 0
-        while True:
+        while False:
             if camera_ready == 1:
                 camera_ready = 0
                 angle_true = camera_command
@@ -124,15 +124,15 @@ def get_camera():
         camera_ready = 1
 
 if __name__ == "__main__":
-    picam2 = Picamera2()
+    #picam2 = Picamera2()
     time.sleep(1) 
-    picam2.configure(picam2.create_preview_configuration()) 
+    #picam2.configure(picam2.create_preview_configuration()) 
     time.sleep(2)
-    picam2.start()
+    #picam2.start()
     time.sleep(3)
     print('Camera initialized')
-    thread_one = threading.Thread(target=main)
-    thread_two = threading.Thread(target=get_camera)
-
-    thread_one.start()
-    thread_two.start()
+    #thread_one = threading.Thread(target=main)
+    #thread_two = threading.Thread(target=get_camera)
+    main()
+    #thread_one.start()
+    #thread_two.start()

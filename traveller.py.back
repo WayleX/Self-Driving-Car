@@ -1,0 +1,72 @@
+import serial
+import time
+import threading
+import dist_sensor
+import car_controller
+
+
+sensors_pins = {"F": (13, 15), "R": (16, 33), "L": (18, 35), "B": (22, 37)}
+
+timeout = 0.0001
+
+state = "F"
+
+c = 10
+
+def decide(arduino, sensors_data):
+    global state
+
+    if state == "F":
+        if sensors_data["F"] > 70:
+            pass
+        elif sensors_data["R"] - sensors_data["L"] > c or sensors_data["L"] < 40:
+            car_controller.send_command(arduino, 'L'*60)
+            state = "R"
+        elif sensors_data["L"] - sensors_data["R"] > c or sensors_data["R"] < 40:
+            car_controller.send_command(arduino, 'R'*60)
+            state = "L"
+    elif state == "R":
+        if sensors_data["F"] > 70 and sensors_data["L"] > 50:
+            car_controller.send_command(arduino, 'R'*60)
+            state = "F"
+        else:
+            pass
+    elif state == "L":
+        if sensors_data["F"] > 70 and sensors_data["R"] > 50:
+            car_controller.send_command(arduino, 'L'*60)
+            state = "F"
+        else:
+            pass
+
+def main():
+    dist_sensor.init_all_sensors(sensors_pins)
+
+    with serial.Serial("/dev/ttyUSB0", 9600, timeout=1) as arduino:
+        time.sleep(1)
+        
+        # Adjust wheels
+        if arduino.isOpen():
+            time.sleep(3)
+            print("{} connected!".format(arduino.port))
+
+        car_controller.send_command(arduino, 'R'*400)
+        car_controller.send_command(arduino, 'L'*72)
+        
+        print("Start")
+        while True:
+            sensors_data = dist_sensor.get_all_sensors_data(timeout, sensors_pins)
+            print(sensors_data)
+            decide(arduino,sensors_data)
+            #time.sleep(0.005)
+            print(state)
+            if state == "F":
+                car_controller.send_command(arduino, 'F'*10)
+            else:
+                car_controller.send_command(arduino, 'B'*10)
+        
+
+if __name__ == '__main__':
+	main()                    
+
+
+

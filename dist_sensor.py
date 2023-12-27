@@ -12,8 +12,9 @@ def init_all_sensors(sensor_pins: dict[str, tuple[int, int]]):
 
 def get_all_sensors_data(timeout, sensor_pins: dict[str, tuple[int, int]]) -> dict[str, float]:
     res = {}
+    time.sleep(timeout)
     for key, value in sensor_pins.items():
-        res[key] = get_distance(timeout, value[0], value[1])
+        res[key] = get_distance(0.001, value[0], value[1])
 
     return res
 
@@ -24,7 +25,7 @@ def init_sensor(trigger, echo):
     GPIO.setup(echo, GPIO.IN)
 
     GPIO.output(trigger, GPIO.LOW)
-
+    time.sleep(2)
 
 def get_distance(timeout, trigger, echo):
     time.sleep(timeout)
