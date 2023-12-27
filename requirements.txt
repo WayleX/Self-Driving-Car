@@ -1,0 +1,6 @@
+numpy
+python-opencv
+Pillow
+PiCamera2
+serial
+threding

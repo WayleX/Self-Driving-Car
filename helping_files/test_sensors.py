@@ -1,4 +1,4 @@
-from dist_sensor import *
+from helping_files.dist_sensor import *
 import time
 
 cleanup()

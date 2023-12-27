@@ -1,8 +1,8 @@
 import serial
 import time
 import threading
-import dist_sensor
-import car_controller
+import helping_files.dist_sensor as dist_sensor
+import helping_files.car_controller as car_controller
 from picamera2 import Picamera2
 import cv2
 import numpy as np
